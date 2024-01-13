@@ -28,12 +28,10 @@ public class JoinRoomController: ControllerBase
         if (requestedRoom == null)
             return BadRequest("Requested room ID does not exist.");
         
-        Console.WriteLine("Yo!");
         UserModel[] existingUsers = UserStorage.GetUsers(postBody.RoomId);
         if (existingUsers.Any(user => String.Equals(postBody.Username, user.Username, StringComparison.OrdinalIgnoreCase)))
             return BadRequest("Provided username already exists in this room.");
 
-        Console.WriteLine("Yo!2");
         var newUser = new UserModel(postBody.Username, postBody.RoomId);
         UserStorage.AddUser(newUser);
 
