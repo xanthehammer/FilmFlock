@@ -64,7 +64,7 @@ public class JoinRoomControllerTest
 
         var controller = new JoinRoomController(roomStorage, userStorage);
 
-        // WHEN we attempt to join a room...
+        // WHEN we attempt to join the room...
         var postBody = new JoinRoomPostBody(existingRoom.RoomId, "Johnny Unitas");
         var response = await controller.Post(postBody);
 
