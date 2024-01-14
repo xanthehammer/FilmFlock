@@ -5,19 +5,25 @@ using FilmFlock.Models;
 public interface IRoomStorage
 {
     public void AddRoom(RoomModel room);
+    public RoomModel? GetRoom(string roomId);
 }
 
 public class RoomInMemoryStorageService : IRoomStorage
 {
-    List<RoomModel> rooms;
+    private List<RoomModel> Rooms;
 
     public RoomInMemoryStorageService()
     {
-        rooms = new List<RoomModel>{};
+        Rooms = new List<RoomModel>{};
     }
 
     public void AddRoom(RoomModel room)
     {
-        rooms.Add(room);
+        Rooms.Add(room);
+    }
+
+    public RoomModel? GetRoom(string roomId)
+    {
+        return Rooms.Find(room => room.RoomId == roomId);
     }
 }
