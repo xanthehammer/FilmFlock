@@ -28,12 +28,10 @@ public readonly struct UserModel
     /// Create a new UserModel that does not already exist.
     /// </summary>
     /// <param name="username">The personalized name selected by the user.</param>
-    /// <param name="roomId">The ID of the room to which this user belongs.</param>
-    public UserModel(string username, string roomId)
+    public UserModel(string username)
     {
         UserId = System.Guid.NewGuid();
         Username = username;
-        RoomId = roomId;
     }
 
     /// <summary>
