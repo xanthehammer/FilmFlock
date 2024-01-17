@@ -42,10 +42,10 @@ public class AddMoviesPostBody
     public string UserId { get; set; }
     public string[] Films { get; set; }
 
-    public AddMoviesPostBody(string roomId, string userId, string[] movies)
+    public AddMoviesPostBody(string roomId, string userId, string[] films)
     {
         RoomId = roomId;
         UserId = userId;
-        Films = movies;
+        Films = films;
     }
 }
