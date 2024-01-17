@@ -9,6 +9,7 @@ namespace FilmFlock.Controllers;
 public class AddMoviesController : ControllerBase
 {
     private IRoomStorage RoomStorage;
+
     public AddMoviesController(IRoomStorage roomStorage)
     {
         RoomStorage = roomStorage;
@@ -17,10 +18,10 @@ public class AddMoviesController : ControllerBase
     [HttpPost]
     public IActionResult Post([FromBody] AddMoviesPostBody postBody)
     {
-        if (RoomStorage.GetRoom(postBody.RoomId) == null)
+        RoomModel requestedRoom = RoomStorage.GetRoom(postBody.RoomId);
+        if (requestedRoom == null)
             return BadRequest("Requested room ID does not exist.");
 
-        RoomModel requestedRoom = RoomStorage.GetRoom(postBody.RoomId);
         UserModel[] existingUsers = requestedRoom.GetUsers();
         if (!existingUsers.Any(user => String.Equals(postBody.UserId, user.UserId.ToString(), StringComparison.OrdinalIgnoreCase)))
             return BadRequest("Requested user does not exist in room.");
