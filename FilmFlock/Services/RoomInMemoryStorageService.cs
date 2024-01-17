@@ -26,4 +26,15 @@ public class RoomInMemoryStorageService : IRoomStorage
     {
         return Rooms.Find(room => room.RoomId == roomId);
     }
+
+    public void AddUser(string roomId, string userName)
+    {
+        RoomModel myRoom = GetRoom(roomId);
+        if (myRoom == null)
+            return;
+        UserModel newBoi = new UserModel(userName);
+
+        myRoom.AddUser(newBoi);
+
+    }
 }

@@ -13,12 +13,10 @@ public class JoinRoomController: ControllerBase
 {
 
     private IRoomStorage RoomStorage;
-    private IUserStorage UserStorage;
 
-    public JoinRoomController(IRoomStorage roomStorage, IUserStorage userStorage)
+    public JoinRoomController(IRoomStorage roomStorage)
     {
         RoomStorage = roomStorage;
-        UserStorage = userStorage;
     }
 
     [HttpPost]
@@ -28,12 +26,12 @@ public class JoinRoomController: ControllerBase
         if (requestedRoom == null)
             return BadRequest("Requested room ID does not exist.");
         
-        UserModel[] existingUsers = UserStorage.GetUsers(postBody.RoomId);
+        UserModel[] existingUsers = requestedRoom.GetUsers();
         if (existingUsers.Any(user => String.Equals(postBody.Username, user.Username, StringComparison.OrdinalIgnoreCase)))
             return BadRequest("Provided username already exists in this room.");
 
-        var newUser = new UserModel(postBody.Username, postBody.RoomId);
-        UserStorage.AddUser(newUser);
+        var newUser = new UserModel(postBody.Username);
+        requestedRoom.AddUser(newUser);
 
         return Ok(newUser.UserId);
     }
