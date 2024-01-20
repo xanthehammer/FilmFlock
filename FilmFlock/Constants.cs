@@ -9,7 +9,7 @@ public static class Constants
 
             public static class Collections
             {
-                public const string Rooms = "rooms";
+                public const string Rooms = "Rooms";
             }
         }
     }
