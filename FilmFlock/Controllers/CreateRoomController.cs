@@ -20,6 +20,14 @@ public class CreateRoomController: ControllerBase
         RoomStorage = roomStorage;
     }
 
+    [HttpGet]
+    public IActionResult Get()
+    {
+        RoomModel room = new RoomModel(DefaultSelectionMethod, DefaultFilmLimit);
+        RoomStorage.AddRoom(room);
+        return Ok(room);
+    }
+
     [HttpPost]
     public IActionResult Post([FromBody] CreateRoomPostBody postBody)
     {
