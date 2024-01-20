@@ -3,53 +3,29 @@ using Microsoft.VisualBasic;
 
 namespace FilmFlock.Models;
 
-[Serializable]
-public readonly struct FilmSelectionMethodModel
+public enum FilmSelectionMethod: ushort
 {
-    /// <summary>
-    /// The type of film selection method this model represents.
-    /// </summary>
-    public FilmSelectionMethodType Type { get; }
-    /// <summary>
-    /// A user friendly title of this method.
-    /// For example, "Upvoting".
-    /// </summary>
-    public string Title { get; }
-    /// <summary>
-    /// A user friendly description of how this selection method works.
-    /// </summary>
-    public string Description { get; }
-
-    public static FilmSelectionMethodModel[] AllMethods
-    {
-        get
-        {
-            return [FilmSelectionMethodModel.Upvoting];
-        }
-    }
-
-    public static FilmSelectionMethodModel Upvoting
-    {
-        get
-        {
-            return new FilmSelectionMethodModel(
-                FilmSelectionMethodType.upvoting,
-                "Upvoting",
-                "Each user gets 1 vote and the movie with the most votes wins! Ties are broken by random selection."
-            );
-        }
-    }
-
-    internal FilmSelectionMethodModel(FilmSelectionMethodType type, string title, string description)
-    {
-        Type = type;
-        Title = title;
-        Description = description;
-    }
-
+    Upvoting = 0
 }
 
-public enum FilmSelectionMethodType: uint
+public static class FilmSelectionMethodExtensions
 {
-    upvoting = 0
+    public static string GetDisplayName(this FilmSelectionMethod method)
+    {
+        switch (method)
+        {
+            case FilmSelectionMethod.Upvoting:
+                return "Upvoting";
+            default:
+                throw new ArgumentOutOfRangeException(nameof(method), method, "Unexpected enum value");
+        }
+    }
+}
+
+public static class FilmSelectionMethodHelper
+{
+    public static FilmSelectionMethod[] AllCases()
+    {
+        return (FilmSelectionMethod[])Enum.GetValues(typeof(FilmSelectionMethod));
+    }
 }

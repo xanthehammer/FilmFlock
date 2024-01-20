@@ -12,7 +12,7 @@ public class CreateRoomController: ControllerBase
 
     private IRoomStorage RoomStorage;
 
-    private const FilmSelectionMethodType DefaultSelectionMethod = FilmSelectionMethodType.upvoting;
+    private const FilmSelectionMethod DefaultSelectionMethod = FilmSelectionMethod.Upvoting;
     private const ushort DefaultFilmLimit = 3;
 
     public CreateRoomController(IRoomStorage roomStorage)
@@ -23,7 +23,7 @@ public class CreateRoomController: ControllerBase
     [HttpPost]
     public IActionResult Post([FromBody] CreateRoomPostBody postBody)
     {
-        FilmSelectionMethodType selectionMethod = postBody.FilmSelectionMethod ?? DefaultSelectionMethod;
+        FilmSelectionMethod selectionMethod = postBody.FilmSelectionMethod ?? DefaultSelectionMethod;
         ushort perUserFilmLimit = postBody.PerUserFilmLimit ?? DefaultFilmLimit;
 
         RoomModel room = new RoomModel(selectionMethod, perUserFilmLimit);
@@ -35,10 +35,10 @@ public class CreateRoomController: ControllerBase
 
 public class CreateRoomPostBody
 {
-    public FilmSelectionMethodType? FilmSelectionMethod { get; set; }
+    public FilmSelectionMethod? FilmSelectionMethod { get; set; }
     public ushort? PerUserFilmLimit { get; set; }
 
-    public CreateRoomPostBody(FilmSelectionMethodType? filmSelectionMethod, ushort? perUserFilmLimit)
+    public CreateRoomPostBody(FilmSelectionMethod? filmSelectionMethod, ushort? perUserFilmLimit)
     {
         FilmSelectionMethod = filmSelectionMethod;
         PerUserFilmLimit = perUserFilmLimit;
