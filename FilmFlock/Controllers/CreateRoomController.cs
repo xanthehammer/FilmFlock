@@ -1,5 +1,4 @@
-using System.Net.NetworkInformation;
-using System.Runtime.CompilerServices;
+using System.ComponentModel.DataAnnotations;
 using FilmFlock.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,6 +30,11 @@ public class CreateRoomController: ControllerBase
     [HttpPost]
     public IActionResult Post([FromBody] CreateRoomPostBody postBody)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         FilmSelectionMethod selectionMethod = postBody.FilmSelectionMethod ?? DefaultSelectionMethod;
         ushort perUserFilmLimit = postBody.PerUserFilmLimit ?? DefaultFilmLimit;
 
@@ -43,6 +47,7 @@ public class CreateRoomController: ControllerBase
 
 public class CreateRoomPostBody
 {
+    [EnumDataType(typeof(FilmSelectionMethod), ErrorMessage = "Invalid enum value")]
     public FilmSelectionMethod? FilmSelectionMethod { get; set; }
     public ushort? PerUserFilmLimit { get; set; }
 
