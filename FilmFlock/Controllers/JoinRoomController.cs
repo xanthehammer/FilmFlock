@@ -20,7 +20,7 @@ public class JoinRoomController: ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] JoinRoomPostBody postBody)
+    public IActionResult Post([FromBody] JoinRoomPostBody postBody)
     {
         RoomModel? requestedRoom = RoomStorage.GetRoom(postBody.RoomId);
         if (requestedRoom == null)
@@ -31,7 +31,8 @@ public class JoinRoomController: ControllerBase
             return BadRequest("Provided username already exists in this room.");
 
         var newUser = new UserModel(postBody.Username);
-        requestedRoom.AddUser(newUser);
+        requestedRoom.Users.Add(newUser);
+        RoomStorage.UpdateRoom(requestedRoom);
 
         return Ok(newUser.UserId);
     }

@@ -1,8 +1,11 @@
+using FilmFlock.Mongo;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton<IRoomStorage, RoomInMemoryStorageService>();
+builder.Services.AddMongoDB();
+builder.Services.AddScoped<IRoomStorage, RoomMongoStorage>();
 
 var app = builder.Build();
 

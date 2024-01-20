@@ -1,6 +1,7 @@
 using System.Net.NetworkInformation;
 using FilmFlock.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace FilmFlock.Controllers;
 
@@ -23,13 +24,19 @@ public class AddMoviesController : ControllerBase
             return BadRequest("Requested room ID does not exist.");
 
         UserModel[] existingUsers = requestedRoom.GetUsers();
-        if (!existingUsers.Any(user => String.Equals(postBody.UserId, user.UserId.ToString(), StringComparison.OrdinalIgnoreCase)))
+        if (!existingUsers.Any(user => Guid.Equals(postBody.UserId, user.UserId)))
             return BadRequest("Requested user does not exist in room.");
 
-        foreach (string movie in postBody.Films)
-        {
-            requestedRoom.Movies.Add(movie);
-        }
+        UserModel? user = existingUsers.ToList().Find(user => Guid.Equals(postBody.UserId, user.UserId));
+        if (user == null)
+            return BadRequest("Bad UserId.");
+        UserModel safeUser = (UserModel) user;
+
+        var resultingFilmCount = safeUser.SuggestedMovies.Count + postBody.Films.Length;
+        if (resultingFilmCount > requestedRoom.PerUserFilmLimit)
+            return BadRequest("Adding the provided {postBody.Films.Count} film suggestions would put the user over the room limit of {requestedRoom.PerUserFilmLimit}. All films rejected.");
+        
+        safeUser.SuggestedMovies.AddRange(postBody.Films);
         
         return Ok();
     }
@@ -39,10 +46,10 @@ public class AddMoviesController : ControllerBase
 public class AddMoviesPostBody
 {
     public string RoomId { get; set; }
-    public string UserId { get; set; }
+    public Guid UserId { get; set; }
     public string[] Films { get; set; }
 
-    public AddMoviesPostBody(string roomId, string userId, string[] films)
+    public AddMoviesPostBody(string roomId, Guid userId, string[] films)
     {
         RoomId = roomId;
         UserId = userId;

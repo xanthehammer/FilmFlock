@@ -11,30 +11,19 @@ public class RoomModel
     public FilmSelectionMethod FilmSelectionMethod { get; }
     public ushort PerUserFilmLimit { get; }
     public List<UserModel> Users { get; set; }
-    public List<string> Movies { get; set; }
 
-    public RoomModel(string roomId, Guid adminId, FilmSelectionMethod selectionMethod, ushort perUserFilmLimit, UserModel[] users)
+    public RoomModel(string roomId, Guid adminId, FilmSelectionMethod selectionMethod, ushort perUserFilmLimit, List<UserModel> users)
     {
         RoomId = roomId;
         AdminId = adminId;
         FilmSelectionMethod = selectionMethod;
         PerUserFilmLimit = perUserFilmLimit;
-
         Users = new List<UserModel>(users);
-        Movies = [];
     }
 
     public RoomModel(FilmSelectionMethod selectionMethod, ushort perUserFilmLimit)
     : this(System.Guid.NewGuid().ToString(), System.Guid.NewGuid(), selectionMethod, perUserFilmLimit, [])
     {
-    }
-    
-    public void AddUser(UserModel newUser)
-    {
-        if (Users.Any(user => String.Equals(newUser.Username, user.Username, StringComparison.OrdinalIgnoreCase)))
-            return;
-
-        Users.Add(newUser);
     }
 
     public UserModel[] GetUsers()
