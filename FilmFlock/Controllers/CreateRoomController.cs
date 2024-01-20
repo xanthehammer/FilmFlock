@@ -1,4 +1,5 @@
 using System.Net.NetworkInformation;
+using System.Runtime.CompilerServices;
 using FilmFlock.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,12 +17,24 @@ public class CreateRoomController: ControllerBase
         RoomStorage = roomStorage;
     }
 
-    [HttpGet]
-    public IActionResult Get()
+    [HttpPost]
+    public async Task<IActionResult> Post([FromBody] CreateRoomPostBody postBody)
     {
-        RoomModel room = new RoomModel();
+        RoomModel room = new RoomModel(postBody.FilmSelectionMethod, postBody.PerUserFilmLimit);
         RoomStorage.AddRoom(room);
         return Ok(room);
     }
 
+}
+
+public class CreateRoomPostBody
+{
+    public FilmSelectionMethodType FilmSelectionMethod { get; set; }
+    public ushort PerUserFilmLimit { get; set; }
+
+    public CreateRoomPostBody(FilmSelectionMethodType filmSelectionMethod, ushort perUserFilmLimit)
+    {
+        FilmSelectionMethod = filmSelectionMethod;
+        PerUserFilmLimit = perUserFilmLimit;
+    }
 }

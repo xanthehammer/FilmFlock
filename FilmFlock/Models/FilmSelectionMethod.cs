@@ -24,7 +24,7 @@ public readonly struct FilmSelectionMethodModel
     {
         get
         {
-            return new FilmSelectionMethodModel[] { FilmSelectionMethodModel.Upvoting };
+            return [FilmSelectionMethodModel.Upvoting];
         }
     }
 
