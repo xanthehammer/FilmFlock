@@ -2,7 +2,7 @@
 /// A User in a Room that is participating in selecting a movie.
 /// </summary>
 [Serializable]
-public struct User
+public class User
 {
     public Guid UserId { get; }
     public string Username { get; }
