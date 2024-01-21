@@ -36,6 +36,7 @@ public class SuggestMoviesController : ControllerBase
             return BadRequest("Adding the provided {postBody.Films.Count} film suggestions would put the user over the room limit of {requestedRoom.PerUserFilmLimit}. All films rejected.");
         
         safeUser.SuggestedMovies.AddRange(postBody.Films);
+        RoomStorage.UpdateRoom(safeRequestedRoom);
         
         return Ok();
     }
