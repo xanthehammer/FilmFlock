@@ -1,4 +1,3 @@
-using System.Net.NetworkInformation;
 using FilmFlock.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,7 +10,6 @@ namespace FilmFlock.Controllers;
 [Route("api/[controller]")]
 public class JoinRoomController: ControllerBase
 {
-
     private IRoomStorage RoomStorage;
 
     public JoinRoomController(IRoomStorage roomStorage)
@@ -20,32 +18,23 @@ public class JoinRoomController: ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] JoinRoomPostBody postBody)
+    public IActionResult Post([FromBody] JoinRoomPostBody postBody)
     {
-        RoomModel? requestedRoom = RoomStorage.GetRoom(postBody.RoomId);
+        Room? requestedRoom = RoomStorage.GetRoom(postBody.RoomId);
         if (requestedRoom == null)
             return BadRequest("Requested room ID does not exist.");
+        Room safeRequestedRoom = (Room) requestedRoom;
         
-        UserModel[] existingUsers = requestedRoom.GetUsers();
+        User[] existingUsers = requestedRoom.GetUsers();
         if (existingUsers.Any(user => String.Equals(postBody.Username, user.Username, StringComparison.OrdinalIgnoreCase)))
             return BadRequest("Provided username already exists in this room.");
 
-        var newUser = new UserModel(postBody.Username);
-        requestedRoom.AddUser(newUser);
+        var newUser = new User(postBody.Username);
+        safeRequestedRoom.Users.Add(newUser);
+        RoomStorage.UpdateRoom(safeRequestedRoom);
 
-        return Ok(newUser.UserId);
+        JoinRoomResponse response = new JoinRoomResponse(newUser);
+        return Ok(response);
     }
 
-}
-
-public class JoinRoomPostBody
-{
-    public string RoomId { get; set; }
-    public string Username { get; set; }
-
-    public JoinRoomPostBody(string roomId, string username)
-    {
-        RoomId = roomId;
-        Username = username;
-    }
 }
