@@ -1,10 +1,12 @@
+using FilmFlock.Mongo;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
 public static class MongoDBService
 {
     public static void AddMongoDB(this IServiceCollection services)
     {
-
         var dbUri = Environment.GetEnvironmentVariable(Constants.Storage.Mongo.URI_ENV_KEY);
         if (dbUri == null)
         {

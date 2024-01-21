@@ -47,7 +47,8 @@ class RoomMongoModel
     [BsonId]
     [BsonRepresentation(BsonType.String)]
     public string RoomId { get; }
-
+    [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
+    public DateTime CreationDate { get; }
     [BsonRepresentation(BsonType.String)]
     public Guid AdminId { get; }
     [BsonRepresentation(BsonType.Int32)]
@@ -57,16 +58,27 @@ class RoomMongoModel
     public List<UserMongoModel> Users { get; set; }
 
     [BsonConstructor] // Constructor for deserialization
-    public RoomMongoModel(string roomId, Guid adminId, List<UserMongoModel> users)
+    public RoomMongoModel(
+        string roomId,
+        DateTime creationDate,
+        Guid adminId,
+        FilmSelectionMethod filmSelectionMethod,
+        ushort perUserFilmLimit,
+        List<UserMongoModel> users
+    )
     {
         RoomId = roomId;
+        CreationDate = creationDate;
         AdminId = adminId;
+        FilmSelectionMethod = filmSelectionMethod;
+        PerUserFilmLimit = perUserFilmLimit;
         Users = users;
     }
 
     public RoomMongoModel(Room room)
     {
         RoomId = room.RoomId;
+        CreationDate = room.CreationDate;
         AdminId = room.AdminId;
         FilmSelectionMethod = room.FilmSelectionMethod;
         PerUserFilmLimit = room.PerUserFilmLimit;
@@ -76,14 +88,14 @@ class RoomMongoModel
     public Room AsAppModel()
     {
         List<User> users = Users.Select(user => user.AsAppModel()).ToList();
-        return new Room(RoomId, AdminId, FilmSelectionMethod, PerUserFilmLimit, users);
+        return new Room(RoomId, CreationDate, AdminId, FilmSelectionMethod, PerUserFilmLimit, users);
     }
 }
 
 class UserMongoModel
 {
     [BsonId]
-    [BsonRepresentation(MongoDB.Bson.BsonType.String)]
+    [BsonRepresentation(BsonType.String)]
     public Guid UserId { get; set; }
     public string Username { get; set; }
     public List<string> SuggestedMovies { get; set; }

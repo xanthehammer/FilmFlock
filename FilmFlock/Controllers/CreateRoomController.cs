@@ -24,7 +24,9 @@ public class CreateRoomController: ControllerBase
     {
         Room room = new Room(DefaultSelectionMethod, DefaultFilmLimit);
         RoomStorage.AddRoom(room);
-        return Ok(room);
+
+        CreateRoomResponse response = new CreateRoomResponse(room);
+        return Ok(response);
     }
 
     [HttpPost]
@@ -40,9 +42,28 @@ public class CreateRoomController: ControllerBase
 
         Room room = new Room(selectionMethod, perUserFilmLimit);
         RoomStorage.AddRoom(room);
-        return Ok(room);
+
+        CreateRoomResponse response = new CreateRoomResponse(room);
+        return Ok(response);
     }
 
+}
+
+[Serializable]
+public readonly struct CreateRoomResponse
+{
+    public string RoomId { get; }
+    public Guid AdminId { get; }
+    public FilmSelectionMethod FilmSelectionMethod { get; }
+    public ushort PerUserFilmLimit { get; }
+
+    public CreateRoomResponse(Room room)
+    {
+        RoomId = room.RoomId;
+        AdminId = room.AdminId;
+        FilmSelectionMethod = room.FilmSelectionMethod;
+        PerUserFilmLimit = room.PerUserFilmLimit;
+    }
 }
 
 public class CreateRoomPostBody
