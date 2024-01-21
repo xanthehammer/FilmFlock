@@ -1,23 +1,21 @@
-using System.Net.NetworkInformation;
 using FilmFlock.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 
 namespace FilmFlock.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AddMoviesController : ControllerBase
+public class SuggestMoviesController : ControllerBase
 {
     private IRoomStorage RoomStorage;
 
-    public AddMoviesController(IRoomStorage roomStorage)
+    public SuggestMoviesController(IRoomStorage roomStorage)
     {
         RoomStorage = roomStorage;
     }
 
     [HttpPost]
-    public IActionResult Post([FromBody] AddMoviesPostBody postBody)
+    public IActionResult Post([FromBody] SuggestMoviesPostBody postBody)
     {
         Room? requestedRoom = RoomStorage.GetRoom(postBody.RoomId);
         if (requestedRoom == null)
@@ -42,18 +40,4 @@ public class AddMoviesController : ControllerBase
         return Ok();
     }
 
-}
-
-public class AddMoviesPostBody
-{
-    public string RoomId { get; set; }
-    public Guid UserId { get; set; }
-    public string[] Films { get; set; }
-
-    public AddMoviesPostBody(string roomId, Guid userId, string[] films)
-    {
-        RoomId = roomId;
-        UserId = userId;
-        Films = films;
-    }
 }

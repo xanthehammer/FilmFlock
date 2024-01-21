@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using FilmFlock.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +7,6 @@ namespace FilmFlock.Controllers;
 [Route("api/[controller]")]
 public class CreateRoomController: ControllerBase
 {
-
     private IRoomStorage RoomStorage;
 
     private const FilmSelectionMethod DefaultSelectionMethod = FilmSelectionMethod.Upvoting;
@@ -47,34 +45,4 @@ public class CreateRoomController: ControllerBase
         return Ok(response);
     }
 
-}
-
-[Serializable]
-public readonly struct CreateRoomResponse
-{
-    public string RoomId { get; }
-    public Guid AdminId { get; }
-    public FilmSelectionMethod FilmSelectionMethod { get; }
-    public ushort PerUserFilmLimit { get; }
-
-    public CreateRoomResponse(Room room)
-    {
-        RoomId = room.RoomId;
-        AdminId = room.AdminId;
-        FilmSelectionMethod = room.FilmSelectionMethod;
-        PerUserFilmLimit = room.PerUserFilmLimit;
-    }
-}
-
-public class CreateRoomPostBody
-{
-    [EnumDataType(typeof(FilmSelectionMethod), ErrorMessage = "Invalid enum value")]
-    public FilmSelectionMethod? FilmSelectionMethod { get; set; }
-    public ushort? PerUserFilmLimit { get; set; }
-
-    public CreateRoomPostBody(FilmSelectionMethod? filmSelectionMethod, ushort? perUserFilmLimit)
-    {
-        FilmSelectionMethod = filmSelectionMethod;
-        PerUserFilmLimit = perUserFilmLimit;
-    }
 }

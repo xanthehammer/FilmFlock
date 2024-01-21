@@ -10,7 +10,6 @@ namespace FilmFlock.Controllers;
 [Route("api/[controller]")]
 public class JoinRoomController: ControllerBase
 {
-
     private IRoomStorage RoomStorage;
 
     public JoinRoomController(IRoomStorage roomStorage)
@@ -34,19 +33,8 @@ public class JoinRoomController: ControllerBase
         safeRequestedRoom.Users.Add(newUser);
         RoomStorage.UpdateRoom(safeRequestedRoom);
 
-        return Ok(newUser.UserId);
+        JoinRoomResponse response = new JoinRoomResponse(newUser);
+        return Ok(response);
     }
 
-}
-
-public class JoinRoomPostBody
-{
-    public string RoomId { get; set; }
-    public string Username { get; set; }
-
-    public JoinRoomPostBody(string roomId, string username)
-    {
-        RoomId = roomId;
-        Username = username;
-    }
 }
