@@ -3,28 +3,28 @@ using FilmFlock.Models;
 
 public class RoomInMemoryStorageService : IRoomStorage
 {
-    private List<RoomModel> Rooms;
+    private List<Room> Rooms;
 
     public RoomInMemoryStorageService()
     {
-        Rooms = new List<RoomModel>{};
+        Rooms = new List<Room>{};
     }
 
-    public void AddRoom(RoomModel room)
+    public void AddRoom(Room room)
     {
         Rooms.Add(room);
     }
 
-    public void UpdateRoom(RoomModel updatedRoom)
+    public void UpdateRoom(Room updatedRoom)
     {
-        RoomModel existingRoom = Rooms.Where(room => room.RoomId == updatedRoom.RoomId).First();
+        Room existingRoom = Rooms.Where(room => room.RoomId == updatedRoom.RoomId).First();
         int indexOfExistingRoom = Rooms.IndexOf(existingRoom);
 
         if (indexOfExistingRoom != -1)
             Rooms[indexOfExistingRoom] = updatedRoom;
     }
 
-    public RoomModel? GetRoom(string roomId)
+    public Room? GetRoom(string roomId)
     {
         return Rooms.Find(room => room.RoomId == roomId);
     }

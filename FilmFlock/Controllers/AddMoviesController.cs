@@ -19,18 +19,19 @@ public class AddMoviesController : ControllerBase
     [HttpPost]
     public IActionResult Post([FromBody] AddMoviesPostBody postBody)
     {
-        RoomModel requestedRoom = RoomStorage.GetRoom(postBody.RoomId);
+        Room? requestedRoom = RoomStorage.GetRoom(postBody.RoomId);
         if (requestedRoom == null)
             return BadRequest("Requested room ID does not exist.");
+        Room safeRequestedRoom = (Room) requestedRoom;
 
-        UserModel[] existingUsers = requestedRoom.GetUsers();
+        User[] existingUsers = safeRequestedRoom.GetUsers();
         if (!existingUsers.Any(user => Guid.Equals(postBody.UserId, user.UserId)))
             return BadRequest("Requested user does not exist in room.");
 
-        UserModel? user = existingUsers.ToList().Find(user => Guid.Equals(postBody.UserId, user.UserId));
+        User? user = existingUsers.ToList().Find(user => Guid.Equals(postBody.UserId, user.UserId));
         if (user == null)
             return BadRequest("Bad UserId.");
-        UserModel safeUser = (UserModel) user;
+        User safeUser = (User) user;
 
         var resultingFilmCount = safeUser.SuggestedMovies.Count + postBody.Films.Length;
         if (resultingFilmCount > requestedRoom.PerUserFilmLimit)

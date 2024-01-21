@@ -14,13 +14,13 @@ public class RoomMongoStorage : IRoomStorage
         RoomCollection = database.GetCollection<RoomMongoModel>(Constants.Storage.Mongo.Collections.Rooms);
     }
 
-    public void AddRoom(RoomModel room)
+    public void AddRoom(Room room)
     {
         RoomMongoModel newRoom = new RoomMongoModel(room);
         RoomCollection.InsertOne(newRoom);
     }
 
-    public void UpdateRoom(RoomModel updatedRoom)
+    public void UpdateRoom(Room updatedRoom)
     {
         var findModelToUpdate = Builders<RoomMongoModel>.Filter
                                     .Eq(room => room.RoomId, updatedRoom.RoomId);
@@ -30,7 +30,7 @@ public class RoomMongoStorage : IRoomStorage
         RoomCollection.UpdateOne(findModelToUpdate, update);
     }
 
-    public RoomModel? GetRoom(string roomId)
+    public Room? GetRoom(string roomId)
     {
         var findRoomFilter = Builders<RoomMongoModel>.Filter
                                 .Eq(room => room.RoomId, roomId);
@@ -64,19 +64,19 @@ class RoomMongoModel
         Users = users;
     }
 
-    public RoomMongoModel(RoomModel roomModel)
+    public RoomMongoModel(Room room)
     {
-        RoomId = roomModel.RoomId;
-        AdminId = roomModel.AdminId;
-        FilmSelectionMethod = roomModel.FilmSelectionMethod;
-        PerUserFilmLimit = roomModel.PerUserFilmLimit;
-        Users = roomModel.Users.Select(user => new UserMongoModel(user)).ToList();
+        RoomId = room.RoomId;
+        AdminId = room.AdminId;
+        FilmSelectionMethod = room.FilmSelectionMethod;
+        PerUserFilmLimit = room.PerUserFilmLimit;
+        Users = room.Users.Select(user => new UserMongoModel(user)).ToList();
     }
 
-    public RoomModel AsAppModel()
+    public Room AsAppModel()
     {
-        List<UserModel> users = Users.Select(user => user.AsAppModel()).ToList();
-        return new RoomModel(RoomId, AdminId, FilmSelectionMethod, PerUserFilmLimit, users);
+        List<User> users = Users.Select(user => user.AsAppModel()).ToList();
+        return new Room(RoomId, AdminId, FilmSelectionMethod, PerUserFilmLimit, users);
     }
 }
 
@@ -96,15 +96,15 @@ class UserMongoModel
         SuggestedMovies = suggestedMovies;
     }
 
-    public UserMongoModel(UserModel userModel)
+    public UserMongoModel(User user)
     {
-        UserId = userModel.UserId;
-        Username = userModel.Username;
-        SuggestedMovies = userModel.SuggestedMovies;
+        UserId = user.UserId;
+        Username = user.Username;
+        SuggestedMovies = user.SuggestedMovies;
     }
 
-    public UserModel AsAppModel()
+    public User AsAppModel()
     {
-        return new UserModel(UserId, Username, SuggestedMovies);
+        return new User(UserId, Username, SuggestedMovies);
     }
 }

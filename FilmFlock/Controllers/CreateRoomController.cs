@@ -22,7 +22,7 @@ public class CreateRoomController: ControllerBase
     [HttpGet]
     public IActionResult Get()
     {
-        RoomModel room = new RoomModel(DefaultSelectionMethod, DefaultFilmLimit);
+        Room room = new Room(DefaultSelectionMethod, DefaultFilmLimit);
         RoomStorage.AddRoom(room);
         return Ok(room);
     }
@@ -38,7 +38,7 @@ public class CreateRoomController: ControllerBase
         FilmSelectionMethod selectionMethod = postBody.FilmSelectionMethod ?? DefaultSelectionMethod;
         ushort perUserFilmLimit = postBody.PerUserFilmLimit ?? DefaultFilmLimit;
 
-        RoomModel room = new RoomModel(selectionMethod, perUserFilmLimit);
+        Room room = new Room(selectionMethod, perUserFilmLimit);
         RoomStorage.AddRoom(room);
         return Ok(room);
     }
