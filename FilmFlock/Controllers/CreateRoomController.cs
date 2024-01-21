@@ -1,4 +1,4 @@
-using System.Net.NetworkInformation;
+using System.ComponentModel.DataAnnotations;
 using FilmFlock.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +11,9 @@ public class CreateRoomController: ControllerBase
 
     private IRoomStorage RoomStorage;
 
+    private const FilmSelectionMethod DefaultSelectionMethod = FilmSelectionMethod.Upvoting;
+    private const ushort DefaultFilmLimit = 3;
+
     public CreateRoomController(IRoomStorage roomStorage)
     {
         RoomStorage = roomStorage;
@@ -19,9 +22,38 @@ public class CreateRoomController: ControllerBase
     [HttpGet]
     public IActionResult Get()
     {
-        RoomModel room = new RoomModel();
+        RoomModel room = new RoomModel(DefaultSelectionMethod, DefaultFilmLimit);
         RoomStorage.AddRoom(room);
         return Ok(room);
     }
 
+    [HttpPost]
+    public IActionResult Post([FromBody] CreateRoomPostBody postBody)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        FilmSelectionMethod selectionMethod = postBody.FilmSelectionMethod ?? DefaultSelectionMethod;
+        ushort perUserFilmLimit = postBody.PerUserFilmLimit ?? DefaultFilmLimit;
+
+        RoomModel room = new RoomModel(selectionMethod, perUserFilmLimit);
+        RoomStorage.AddRoom(room);
+        return Ok(room);
+    }
+
+}
+
+public class CreateRoomPostBody
+{
+    [EnumDataType(typeof(FilmSelectionMethod), ErrorMessage = "Invalid enum value")]
+    public FilmSelectionMethod? FilmSelectionMethod { get; set; }
+    public ushort? PerUserFilmLimit { get; set; }
+
+    public CreateRoomPostBody(FilmSelectionMethod? filmSelectionMethod, ushort? perUserFilmLimit)
+    {
+        FilmSelectionMethod = filmSelectionMethod;
+        PerUserFilmLimit = perUserFilmLimit;
+    }
 }

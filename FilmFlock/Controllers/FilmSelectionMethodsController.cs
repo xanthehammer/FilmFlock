@@ -1,4 +1,3 @@
-using System.Net.NetworkInformation;
 using FilmFlock.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,7 +14,7 @@ public class FilmSelectionMethodsController: ControllerBase
     [HttpGet]
     public IActionResult Get()
     {
-        var methods = FilmSelectionMethodModel.AllMethods;
+        FilmSelectionMethod[] methods = FilmSelectionMethodHelper.AllCases();
         return Ok(methods);
     }
 
