@@ -1,8 +1,5 @@
 using MongoDB.Driver;
 
-using MongoDB.Bson.Serialization;
-using FilmFlock.Mongo;
-
 public static class MongoDBService
 {
     public static void AddMongoDB(this IServiceCollection services)
