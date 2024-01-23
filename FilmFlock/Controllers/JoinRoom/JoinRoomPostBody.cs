@@ -1,3 +1,7 @@
+using FilmFlock.Models;
+
+namespace FilmFlock.Controllers;
+
 public class JoinRoomPostBody
 {
     public string RoomId { get; set; }

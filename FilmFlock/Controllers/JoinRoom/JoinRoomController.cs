@@ -23,7 +23,7 @@ public class JoinRoomController: ControllerBase
         Room? requestedRoom = RoomStorage.GetRoom(postBody.RoomId);
         if (requestedRoom == null)
             return BadRequest("Requested room ID does not exist.");
-        Room safeRequestedRoom = (Room) requestedRoom;
+        Room safeRequestedRoom = requestedRoom;
         
         User[] existingUsers = requestedRoom.GetUsers();
         if (existingUsers.Any(user => String.Equals(postBody.Username, user.Username, StringComparison.OrdinalIgnoreCase)))

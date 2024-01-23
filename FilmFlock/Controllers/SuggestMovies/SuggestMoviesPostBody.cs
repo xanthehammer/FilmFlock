@@ -1,3 +1,5 @@
+using FilmFlock.Models;
+
 namespace FilmFlock.Controllers;
 
 public class SuggestMoviesPostBody
