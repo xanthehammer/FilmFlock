@@ -1,9 +1,5 @@
-using System.Text.Json.Serialization;
-using System.Xml;
-
 namespace FilmFlock.Models;
 
-[Serializable]
 public class Room
 {
     public string RoomId { get; }
