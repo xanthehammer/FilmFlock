@@ -26,9 +26,9 @@ public class Room
         Users = new List<User>(users);
     }
 
-    public Room(FilmSelectionMethod selectionMethod, ushort perUserFilmLimit)
+    public Room(string roomId, FilmSelectionMethod selectionMethod, ushort perUserFilmLimit)
     : this(
-        System.Guid.NewGuid().ToString(),
+        roomId,
         DateTime.UtcNow,
         System.Guid.NewGuid(),
         selectionMethod,

@@ -10,24 +10,27 @@ namespace FilmFlock.Controllers;
 public class CreateRoomController: ControllerBase
 {
     private IRoomStorage RoomStorage;
+    private IRoomIdGenerator RoomIdGenerator;
     private IRoomActivityCreating ActivityCreator;
 
     private const FilmSelectionMethod DefaultSelectionMethod = FilmSelectionMethod.Upvoting;
     private const ushort DefaultFilmLimit = 3;
 
-    public CreateRoomController(IRoomStorage roomStorage, IRoomActivityCreating activityCreating)
+    public CreateRoomController(IRoomStorage roomStorage, IRoomIdGenerator roomIdGenerator, IRoomActivityCreating activityCreating)
     {
         RoomStorage = roomStorage;
+        RoomIdGenerator = roomIdGenerator;
         ActivityCreator = activityCreating;
     }
 
     [HttpGet]
     public IActionResult Get()
     {
-        Room room = new Room(DefaultSelectionMethod, DefaultFilmLimit);
-        RoomStorage.AddRoom(room);
+        string newRoomId = RoomIdGenerator.GenerateNew();
+        Room newRoom = new Room(newRoomId, DefaultSelectionMethod, DefaultFilmLimit);
+        RoomStorage.AddRoom(newRoom);
 
-        CreateRoomResponse response = new CreateRoomResponse(room);
+        CreateRoomResponse response = new CreateRoomResponse(newRoom);
         return Ok(response);
     }
 
@@ -42,12 +45,13 @@ public class CreateRoomController: ControllerBase
         FilmSelectionMethod selectionMethod = postBody.FilmSelectionMethod ?? DefaultSelectionMethod;
         ushort perUserFilmLimit = postBody.PerUserFilmLimit ?? DefaultFilmLimit;
 
-        Room room = new Room(selectionMethod, perUserFilmLimit);
-        RoomStorage.AddRoom(room);
+        string newRoomId = RoomIdGenerator.GenerateNew();
+        Room newRoom = new Room(newRoomId, selectionMethod, perUserFilmLimit);
+        RoomStorage.AddRoom(newRoom);
 
         ActivityCreator.StoreActivity(selectionMethod, room.RoomId);
 
-        CreateRoomResponse response = new CreateRoomResponse(room);
+        CreateRoomResponse response = new CreateRoomResponse(newRoom);
         return Ok(response);
     }
 }

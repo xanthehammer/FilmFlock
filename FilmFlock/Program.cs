@@ -1,3 +1,4 @@
+using FilmFlock.Models;
 using FilmFlock.Mongo;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddMongoDB();
 
+builder.Services.AddScoped<IRoomIdGenerator, RoomIdGenerator>();
 builder.Services.AddScoped<IRoomStorage, RoomMongoStorage>();
 builder.Services.AddScoped<IUpvoteActivityStorage, UpdateActivityStorage>();
 builder.Services.AddScoped<IRoomActivityCreating, RoomActivityCreator>();
