@@ -20,7 +20,7 @@ public class SuggestMoviesController : ControllerBase
         Room? requestedRoom = RoomStorage.GetRoom(postBody.RoomId);
         if (requestedRoom == null)
             return BadRequest("Requested room ID does not exist.");
-        Room safeRequestedRoom = (Room) requestedRoom;
+        Room safeRequestedRoom = requestedRoom;
 
         User[] existingUsers = safeRequestedRoom.GetUsers();
         if (!existingUsers.Any(user => Guid.Equals(postBody.UserId, user.UserId)))
@@ -29,7 +29,7 @@ public class SuggestMoviesController : ControllerBase
         User? user = existingUsers.ToList().Find(user => Guid.Equals(postBody.UserId, user.UserId));
         if (user == null)
             return BadRequest("Bad UserId.");
-        User safeUser = (User) user;
+        User safeUser = user;
 
         var resultingFilmCount = safeUser.SuggestedMovies.Count + postBody.Films.Length;
         if (resultingFilmCount > requestedRoom.PerUserFilmLimit)
