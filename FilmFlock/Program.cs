@@ -6,6 +6,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddMongoDB();
 builder.Services.AddScoped<IRoomStorage, RoomMongoStorage>();
+builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowLocalhost3000",
+            builder => builder.WithOrigins("http://localhost:3000")
+                              .AllowAnyHeader()
+                              .AllowAnyMethod()
+                              .AllowCredentials()
+                              .SetIsOriginAllowed((host) => true));
+    });
 
 var app = builder.Build();
 
@@ -22,6 +31,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseCors("AllowLocalhost3000");
 app.UseAuthorization();
 
 app.MapControllerRoute(
