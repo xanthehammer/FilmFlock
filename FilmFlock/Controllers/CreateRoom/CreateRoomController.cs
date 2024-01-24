@@ -1,4 +1,6 @@
+using System.Diagnostics;
 using FilmFlock.Models;
+using FilmFlock.Mongo;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FilmFlock.Controllers;
@@ -9,14 +11,16 @@ public class CreateRoomController: ControllerBase
 {
     private IRoomStorage RoomStorage;
     private IRoomIdGenerator RoomIdGenerator;
+    private IRoomActivityCreating ActivityCreator;
 
     private const FilmSelectionMethod DefaultSelectionMethod = FilmSelectionMethod.Upvoting;
     private const ushort DefaultFilmLimit = 3;
 
-    public CreateRoomController(IRoomStorage roomStorage, IRoomIdGenerator roomIdGenerator)
+    public CreateRoomController(IRoomStorage roomStorage, IRoomIdGenerator roomIdGenerator, IRoomActivityCreating activityCreating)
     {
         RoomStorage = roomStorage;
         RoomIdGenerator = roomIdGenerator;
+        ActivityCreator = activityCreating;
     }
 
     [HttpGet]
@@ -45,8 +49,9 @@ public class CreateRoomController: ControllerBase
         Room newRoom = new Room(newRoomId, selectionMethod, perUserFilmLimit);
         RoomStorage.AddRoom(newRoom);
 
+        ActivityCreator.StoreActivity(selectionMethod, room.RoomId);
+
         CreateRoomResponse response = new CreateRoomResponse(newRoom);
         return Ok(response);
     }
-
 }

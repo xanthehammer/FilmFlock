@@ -6,8 +6,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddMongoDB();
-builder.Services.AddScoped<IRoomStorage, RoomMongoStorage>();
+
 builder.Services.AddScoped<IRoomIdGenerator, RoomIdGenerator>();
+builder.Services.AddScoped<IRoomStorage, RoomMongoStorage>();
+builder.Services.AddScoped<IUpvoteActivityStorage, UpdateActivityStorage>();
+builder.Services.AddScoped<IRoomActivityCreating, RoomActivityCreator>();
+
 builder.Services.AddCors(options =>
     {
         options.AddPolicy("AllowLocalhost3000",
