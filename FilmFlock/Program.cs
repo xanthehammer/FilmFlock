@@ -12,6 +12,16 @@ builder.Services.AddScoped<IRoomStorage, RoomMongoStorage>();
 builder.Services.AddScoped<IUpvoteActivityStorage, UpdateActivityStorage>();
 builder.Services.AddScoped<IRoomActivityCreating, RoomActivityCreator>();
 
+builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowLocalhost3000",
+            builder => builder.WithOrigins("http://localhost:3000")
+                              .AllowAnyHeader()
+                              .AllowAnyMethod()
+                              .AllowCredentials()
+                              .SetIsOriginAllowed((host) => true));
+    });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -27,6 +37,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseCors("AllowLocalhost3000");
 app.UseAuthorization();
 
 app.MapControllerRoute(

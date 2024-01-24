@@ -4,32 +4,30 @@ import '../index.css';
 import App from '../App';
 import reportWebVitals from '../reportWebVitals';
 import Header from './Header';
-import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { Link, redirect, Navigate } from 'react-router-dom';
 
 function CreateRoomOptions(){
-    return(
-        <>
-        <label>
-            <input name="username" placeholder="Name" />
-        </label>
 
-        <br/>
+  const [moveToWaiting, setMoveToWaiting] = useState(false);
+  
+    function handleClick() {
+      debugger;
 
-        <label>
-            <input name="maxFilms" placeholder="Max # of Films"/>
-        </label>
+      axios.post('http://localhost:5149/api/CreateRoom', {"FilmSelectionMethod": 0, "PerUserFilmLimit": 3}, { headers: {'Content-Type': 'application/json'}, withCredentials: true});
 
-        <br/>
-        
-        {/* TODO: Change this to waiting room */}
-        <Link to="/JoinRoom">
-            <button>Let's Go!</button>
-        </Link>
-        
-        </>
-    )
+      setMoveToWaiting(true);
+    }
+
+    return (
+      <div>
+        <input name="userName" />
+        <input name="maxMovies" />
+        <button onClick={handleClick}>Let's Go!</button>
+        {moveToWaiting && (<Navigate to="/waitingRoom" replace={true} />)}
+      </div>
+    );
 }
-
 
 function CreateRoom() {
     return (
