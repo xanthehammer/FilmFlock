@@ -5,7 +5,7 @@ import App from '../App';
 import reportWebVitals from '../reportWebVitals';
 import Header from './Header';
 import axios from 'axios';
-import { Link, redirect, Navigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 
 function CreateRoomOptions(){
 

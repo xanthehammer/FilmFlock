@@ -23,17 +23,6 @@ public class CreateRoomController: ControllerBase
         ActivityCreator = activityCreating;
     }
 
-    [HttpGet]
-    public IActionResult Get()
-    {
-        string newRoomId = RoomIdGenerator.GenerateNew();
-        Room newRoom = new Room(newRoomId, DefaultSelectionMethod, DefaultFilmLimit);
-        RoomStorage.AddRoom(newRoom);
-
-        CreateRoomResponse response = new CreateRoomResponse(newRoom);
-        return Ok(response);
-    }
-
     [HttpPost]
     public IActionResult Post([FromBody] CreateRoomPostBody postBody)
     {
@@ -42,14 +31,19 @@ public class CreateRoomController: ControllerBase
             return BadRequest(ModelState);
         }
 
+        string userName = postBody.UserName;
+
         FilmSelectionMethod selectionMethod = postBody.FilmSelectionMethod ?? DefaultSelectionMethod;
         ushort perUserFilmLimit = postBody.PerUserFilmLimit ?? DefaultFilmLimit;
 
         string newRoomId = RoomIdGenerator.GenerateNew();
-        Room newRoom = new Room(newRoomId, selectionMethod, perUserFilmLimit);
+
+        User hatMan = new User(userName);
+
+        Room newRoom = new Room(newRoomId, hatMan.UserId, selectionMethod, perUserFilmLimit, new List<User> {hatMan});
         RoomStorage.AddRoom(newRoom);
 
-        ActivityCreator.StoreActivity(selectionMethod, room.RoomId);
+        ActivityCreator.StoreActivity(selectionMethod, newRoom.RoomId);
 
         CreateRoomResponse response = new CreateRoomResponse(newRoom);
         return Ok(response);
