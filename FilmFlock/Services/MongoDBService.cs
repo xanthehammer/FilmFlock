@@ -1,6 +1,3 @@
-using FilmFlock.Mongo;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
 public static class MongoDBService
@@ -10,7 +7,7 @@ public static class MongoDBService
         var dbUri = Environment.GetEnvironmentVariable(Constants.Storage.Mongo.URI_ENV_KEY);
         if (dbUri == null)
         {
-            Console.WriteLine("You must set your <{Constants.Storage.Mongo.URI_ENV_KEY}> environment variable to access the remote DB.");
+            Console.WriteLine($"You must set your <{Constants.Storage.Mongo.URI_ENV_KEY}> environment variable to access the remote DB.");
             Environment.Exit(0);
         }
 

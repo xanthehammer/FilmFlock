@@ -1,7 +1,6 @@
 using MongoDB.Driver;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using System.Linq;
 using FilmFlock.Models;
 
 namespace FilmFlock.Mongo;
@@ -34,7 +33,7 @@ public class RoomMongoStorage : IRoomStorage
     {
         var findRoomFilter = Builders<RoomMongoModel>.Filter
                                 .Eq(room => room.RoomId, roomId);
-        var foundRoom = RoomCollection.Find(findRoomFilter).FirstOrDefault();
+        var foundRoom = RoomCollection.Find(findRoomFilter).Limit(1).FirstOrDefault();
         if (foundRoom == null)
             return null;
         

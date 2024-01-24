@@ -1,7 +1,6 @@
 /// <summary>
 /// A User in a Room that is participating in selecting a movie.
 /// </summary>
-[Serializable]
 public class User
 {
     public Guid UserId { get; }

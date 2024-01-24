@@ -10,6 +10,7 @@ public static class Constants
             public static class Collections
             {
                 public const string Rooms = "Rooms";
+                public const string UpvoteActivities = "UpvoteActivities";
             }
         }
     }
