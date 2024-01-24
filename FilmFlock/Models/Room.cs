@@ -23,17 +23,17 @@ public class Room
         AdminId = adminId;
         FilmSelectionMethod = selectionMethod;
         PerUserFilmLimit = perUserFilmLimit;
-        Users = new List<User>(users);
+        Users = users;
     }
 
-    public Room(string roomId, FilmSelectionMethod selectionMethod, ushort perUserFilmLimit)
+    public Room(string roomId, Guid adminId, FilmSelectionMethod selectionMethod, ushort perUserFilmLimit, List<User> users)
     : this(
         roomId,
         DateTime.UtcNow,
-        System.Guid.NewGuid(),
+        adminId,
         selectionMethod,
         perUserFilmLimit,
-        []
+        users
     )
     {
     }
@@ -42,5 +42,4 @@ public class Room
     {
         return Users.ToArray();
     }
-
 }
