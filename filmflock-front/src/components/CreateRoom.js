@@ -11,9 +11,9 @@ function CreateRoomOptions(){
 
   const [moveToWaiting, setMoveToWaiting] = useState(false);
   
-  function handleClick() {
+  async function handleClick() {
 
-    axios.post('http://localhost:5149/api/CreateRoom', {"FilmSelectionMethod": 0, "PerUserFilmLimit": 3}, { headers: {'Content-Type': 'application/json'}, withCredentials: true});
+    const roomId = await axios.post('http://localhost:5149/api/CreateRoom', {"FilmSelectionMethod": 0, "PerUserFilmLimit": 3}, { headers: {'Content-Type': 'application/json'}, withCredentials: true});
 
     setMoveToWaiting(true);
   }
@@ -23,7 +23,7 @@ function CreateRoomOptions(){
       <input name="userName" />
       <input name="maxMovies" />
       <button onClick={handleClick}>Let's Go!</button>
-      {moveToWaiting && (<Navigate to="/waitingRoom" replace={true} />)}
+      {moveToWaiting && (<Navigate to="/waitingRoom/${roomId}" replace={true} />)}
     </div>
   );
 }
